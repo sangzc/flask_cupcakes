@@ -48,7 +48,7 @@ def create_cupcake():
     db.session.add(new_cupcake)
     db.session.commit()
 
-    cupcake = Cupcake.query.order_by(Cupcake.id.desc()).first()
+    cupcake = Cupcake.query.get(new_cupcake.id)
 
     serialized_cupcake = {'id': cupcake.id,
                           'flavor': cupcake.flavor,
@@ -57,3 +57,5 @@ def create_cupcake():
                           'image': cupcake.image}
 
     return jsonify(response=serialized_cupcake)
+
+    
