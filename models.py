@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
-
+DEFAULT_URL = "https://tinyurl.com/truffle-cupcake"
 
 def connect_db(app):
     db.app = app
@@ -24,5 +24,5 @@ class Cupcake(db.Model):
                        nullable=False)
     image = db.Column(db.Text,
                       nullable=False,
-                      default="https://tinyurl.com/truffle-cupcake")
+                      default=DEFAULT_URL)
 

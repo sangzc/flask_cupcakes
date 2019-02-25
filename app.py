@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from models import db, connect_db, Cupcake
+from models import db, connect_db, DEFAULT_URL, Cupcake
 
 
 app = Flask(__name__)
@@ -48,7 +48,28 @@ def create_cupcake():
     db.session.add(new_cupcake)
     db.session.commit()
 
-    cupcake = Cupcake.query.get(new_cupcake.id)
+    serialized_cupcake = {'id': new_cupcake.id,
+                          'flavor': new_cupcake.flavor,
+                          'size': new_cupcake.size,
+                          'rating': new_cupcake.rating,
+                          'image': new_cupcake.image}
+
+    return jsonify(response=serialized_cupcake)
+
+
+@app.route('/cupcakes/<int:cupcake_id>', methods=["PATCH"])
+def update_cupcake(cupcake_id):
+    ''' update cupcake with id passed into URL; respond with dictionary
+    cf. {"id": 1, "flave": text, "size": text, "rating": 10.3, "image":text}'''
+
+    cupcake = Cupcake.query.get(cupcake_id)
+
+    cupcake.flavor = request.json['flavor']
+    cupcake.size = request.json['size']
+    cupcake.rating = request.json['rating']
+    cupcake.image = request.json.get('image') or DEFAULT_URL
+
+    db.session.commit()
 
     serialized_cupcake = {'id': cupcake.id,
                           'flavor': cupcake.flavor,
@@ -58,4 +79,15 @@ def create_cupcake():
 
     return jsonify(response=serialized_cupcake)
 
-    
+
+@app.route('/cupcakes/<int:cupcake_id>', methods=["DELETE"])
+def delete_that_cupcake(cupcake_id):
+    ''' delete cupcake with id passed into URL: respond with dict
+    cf. {"message": "Deleted"}'''
+
+    cupcake = Cupcake.query.get(cupcake_id)
+
+    db.session.delete(cupcake)
+    db.session.commit()
+
+    return jsonify(message="Deleted")
