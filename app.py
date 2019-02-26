@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from models import db, connect_db, DEFAULT_URL, Cupcake
 
 
@@ -91,3 +91,9 @@ def delete_that_cupcake(cupcake_id):
     db.session.commit()
 
     return jsonify(message="Deleted")
+
+
+@app.route('/')
+def show_list_of_cupcakes():
+
+    return render_template('index.html')
