@@ -57,10 +57,11 @@ class CupcakesTestCase(TestCase):
                                           "rating":6,
                                           })
         response_data = response.json['response']
-        self.assertEqual(response_data['flavor'], 'mint')
-        self.assertEqual(response_data['size'], 'tuple')
-        self.assertEqual(response_data['rating'], 6)
-        self.assertEqual(response_data['image'], DEFAULT_URL)
+        self.assertEqual(response_data, {"flavor":"mint",
+                                          "size":"tuple",
+                                          "rating":6,
+                                          "id":10000,
+                                          "image":DEFAULT_URL})
         self.assertEqual(response.status_code, 200)
 
         get_response = self.client.get("/cupcakes")
